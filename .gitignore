@@ -1,6 +1,9 @@
- codex/crear-.gitignore-y-eliminar-target
 # Ignore Maven build directories
 **/target/
+# Node and Next.js
+admin-ui/node_modules/
+admin-ui/.next/
+
 
 # Ignore IDE files
 .idea/
