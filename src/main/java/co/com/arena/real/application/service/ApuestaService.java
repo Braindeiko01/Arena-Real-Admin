@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +33,22 @@ public class ApuestaService {
         apuesta.setEstado(estado);
         Apuesta saved = apuestaRepository.save(apuesta);
         return ApuestaMapper.toDto(saved);
+    }
+
+    public List<ApuestaResponse> listarTodas() {
+        return apuestaRepository.findAll().stream()
+                .map(ApuestaMapper::toDto)
+                .toList();
+    }
+
+    public List<ApuestaResponse> listarPorEstado(EstadoApuesta estado) {
+        return apuestaRepository.findByEstado(estado).stream()
+                .map(ApuestaMapper::toDto)
+                .toList();
+    }
+
+    public Optional<ApuestaResponse> obtenerPorId(UUID id) {
+        return apuestaRepository.findById(id)
+                .map(ApuestaMapper::toDto);
     }
 }
