@@ -1,8 +1,8 @@
 // Default to local backend during development if no env variable is provided
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080/api";
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
 
 export async function getPendingTransactions() {
-  const res = await fetch(`${API_BASE}/transacciones/pendientes`, { cache: "no-store" });
+  const res = await fetch(`${API_BASE}/api/transacciones/pendientes`, { cache: "no-store" });
   if (!res.ok) {
     throw new Error(`Failed to fetch transactions: ${res.status}`);
   }
@@ -10,7 +10,7 @@ export async function getPendingTransactions() {
 }
 
 export async function approveTransaction(id: string) {
-  const res = await fetch(`${API_BASE}/transacciones/${id}/aprobar`, { method: "POST" });
+  const res = await fetch(`${API_BASE}/api/transacciones/${id}/aprobar`, { method: "POST" });
   if (!res.ok) {
     throw new Error(`Failed to approve transaction: ${res.status}`);
   }
@@ -18,23 +18,15 @@ export async function approveTransaction(id: string) {
 }
 
 export async function cancelTransaction(id: string) {
-  const res = await fetch(`${API_BASE}/transacciones/${id}/cancelar`, { method: "POST" });
+  const res = await fetch(`${API_BASE}/api/transacciones/${id}/cancelar`, { method: "POST" });
   if (!res.ok) {
     throw new Error(`Failed to cancel transaction: ${res.status}`);
   }
   return res.json();
 }
 
-export async function cancelTransaction(id: string) {
-  const res = await fetch(`${API_BASE}/transacciones/${id}/cancelar`, { method: "POST" });
-  if (!res.ok) {
-    throw new Error("Failed to cancel transaction");
-  }
-  return res.json();
-}
-
 export async function getPendingMatches() {
-  const res = await fetch(`${API_BASE}/partidas/pendientes`, { cache: "no-store" });
+  const res = await fetch(`${API_BASE}/api/partidas/pendientes`, { cache: "no-store" });
   if (!res.ok) {
     throw new Error(`Failed to fetch matches: ${res.status}`);
   }
@@ -42,7 +34,7 @@ export async function getPendingMatches() {
 }
 
 export async function validateMatch(id: string) {
-  const res = await fetch(`${API_BASE}/partidas/${id}/validar`, { method: "PUT" });
+  const res = await fetch(`${API_BASE}/api/partidas/${id}/validar`, { method: "PUT" });
   if (!res.ok) {
     throw new Error(`Failed to validate match: ${res.status}`);
   }
