@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import * as RadixButton from '@radix-ui/react-slot';
-import { getPendingTransactions, approveTransaction } from '@/lib/api';
+import { getPendingTransactions, approveTransaction, cancelTransaction } from '@/lib/api';
 
 interface Transaction {
   id: string;
@@ -28,6 +28,11 @@ export default function TransactionsTable() {
     setTransactions((prev) => prev.filter((t) => t.id !== id));
   };
 
+  const handleCancel = async (id: string) => {
+    await cancelTransaction(id);
+    setTransactions((prev) => prev.filter((t) => t.id !== id));
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-600">{error}</p>;
 
@@ -47,12 +52,18 @@ export default function TransactionsTable() {
             <td className="border-b p-2">{t.jugadorId}</td>
             <td className="border-b p-2">{t.monto}</td>
             <td className="border-b p-2">{t.tipo}</td>
-            <td className="border-b p-2">
+            <td className="border-b p-2 space-x-2">
               <RadixButton.Slot
                 className="bg-blue-600 text-white px-2 py-1 rounded"
                 onClick={() => handleApprove(t.id)}
               >
                 Aprobar
+              </RadixButton.Slot>
+              <RadixButton.Slot
+                className="bg-red-600 text-white px-2 py-1 rounded"
+                onClick={() => handleCancel(t.id)}
+              >
+                Cancelar
               </RadixButton.Slot>
             </td>
           </tr>
