@@ -49,6 +49,23 @@ public class PartidaService {
                 .toList();
     }
 
+    public List<PartidaResponse> listarTodas() {
+        return partidaRepository.findAll().stream()
+                .map(partidaMapper::toDto)
+                .toList();
+    }
+
+    public List<PartidaResponse> listarPorEstado(EstadoPartida estado) {
+        return partidaRepository.findByEstado(estado).stream()
+                .map(partidaMapper::toDto)
+                .toList();
+    }
+
+    public Optional<PartidaResponse> obtenerPorId(UUID id) {
+        return partidaRepository.findById(id)
+                .map(partidaMapper::toDto);
+    }
+
     @Transactional
     public PartidaResponse marcarComoValidada(UUID partidaId) {
         Partida partida = partidaRepository.findById(partidaId)

@@ -2,15 +2,12 @@ package co.com.arena.real.application.controller;
 
 import co.com.arena.real.application.service.PartidaService;
 import co.com.arena.real.infrastructure.dto.rs.PartidaResponse;
+import co.com.arena.real.domain.entity.partida.EstadoPartida;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +20,15 @@ public class PartidaController {
 
     private final PartidaService partidaService;
 
+    @GetMapping
+    @Operation(summary = "Listar", description = "Obtiene todas las partidas o filtra por estado")
+    public ResponseEntity<List<PartidaResponse>> listar(@RequestParam(value = "estado", required = false) EstadoPartida estado) {
+        List<PartidaResponse> lista = (estado == null)
+                ? partidaService.listarTodas()
+                : partidaService.listarPorEstado(estado);
+        return ResponseEntity.ok(lista);
+    }
+
     @GetMapping("/pendientes")
     @Operation(summary = "Listar pendientes", description = "Obtiene partidas que deben ser validadas")
     public ResponseEntity<List<PartidaResponse>> listarPendientes() {
@@ -34,6 +40,14 @@ public class PartidaController {
     @Operation(summary = "Buscar por apuesta", description = "Obtiene la partida asociada a una apuesta")
     public ResponseEntity<PartidaResponse> obtenerPorApuesta(@PathVariable UUID apuestaId) {
         return partidaService.obtenerPorApuestaId(apuestaId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener", description = "Obtiene una partida por su identificador")
+    public ResponseEntity<PartidaResponse> obtenerPorId(@PathVariable UUID id) {
+        return partidaService.obtenerPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
