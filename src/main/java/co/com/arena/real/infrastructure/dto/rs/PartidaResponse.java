@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import co.com.arena.real.domain.entity.partida.ModoJuego;
+
 
 @Data
 @NoArgsConstructor
@@ -21,6 +23,7 @@ public class PartidaResponse implements Serializable {
 
     private UUID id;
     private UUID apuestaId;
+    private ModoJuego modoJuego;
     private String ganadorId;
     private boolean validada;
     private LocalDateTime validadaEn;

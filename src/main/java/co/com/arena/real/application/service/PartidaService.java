@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,6 +41,12 @@ public class PartidaService {
         return partidaRepository.findById(partidaId)
                 .filter(p -> p.getEstado() == EstadoPartida.EN_CURSO || p.getEstado() == EstadoPartida.POR_APROBAR)
                 .map(Partida::getChatId);
+    }
+
+    public List<PartidaResponse> listarPendientes() {
+        return partidaRepository.findByEstado(EstadoPartida.POR_APROBAR).stream()
+                .map(partidaMapper::toDto)
+                .toList();
     }
 
     @Transactional

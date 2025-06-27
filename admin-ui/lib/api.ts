@@ -16,6 +16,14 @@ export async function approveTransaction(id: string) {
   return res.json();
 }
 
+export async function cancelTransaction(id: string) {
+  const res = await fetch(`${API_BASE}/transacciones/${id}/cancelar`, { method: "POST" });
+  if (!res.ok) {
+    throw new Error("Failed to cancel transaction");
+  }
+  return res.json();
+}
+
 export async function getPendingMatches() {
   const res = await fetch(`${API_BASE}/partidas/pendientes`, { cache: "no-store" });
   if (!res.ok) {
