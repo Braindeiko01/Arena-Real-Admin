@@ -46,6 +46,12 @@ public class TransaccionService {
                 .toList();
     }
 
+    public List<TransaccionResponse> listarPendientes() {
+        return transaccionRepository.findByEstado(EstadoTransaccion.PENDIENTE).stream()
+                .map(transaccionMapper::toDto)
+                .toList();
+    }
+
     @Transactional
     public TransaccionResponse aprobarTransaccion(UUID id) {
         Transaccion transaccion = transaccionRepository.findById(id)
@@ -63,6 +69,20 @@ public class TransaccionService {
         TransaccionResponse dto = transaccionMapper.toDto(saved);
         eventPublisher.publishEvent(new TransaccionAprobadaEvent(dto));
         return dto;
+    }
+
+    @Transactional
+    public TransaccionResponse cancelarTransaccion(UUID id) {
+        Transaccion transaccion = transaccionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Transaccion no encontrada"));
+
+        if (!EstadoTransaccion.PENDIENTE.equals(transaccion.getEstado())) {
+            throw new IllegalArgumentException("La transaccion ya fue procesada");
+        }
+
+        transaccion.setEstado(EstadoTransaccion.RECHAZADA);
+        Transaccion saved = transaccionRepository.save(transaccion);
+        return transaccionMapper.toDto(saved);
     }
 
     private void modificarSaldoJugador(Transaccion transaccion) {

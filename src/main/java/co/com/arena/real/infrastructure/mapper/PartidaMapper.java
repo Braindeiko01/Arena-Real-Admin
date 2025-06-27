@@ -14,6 +14,7 @@ public class PartidaMapper {
         return PartidaResponse.builder()
                 .id(entity.getId())
                 .apuestaId(entity.getApuesta() != null ? entity.getApuesta().getId() : null)
+                .modoJuego(entity.getModoJuego())
                 .ganadorId(entity.getGanador() != null ? entity.getGanador().getId() : null)
                 .validada(entity.isValidada())
                 .validadaEn(entity.getValidadaEn())

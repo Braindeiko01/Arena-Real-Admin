@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,6 +22,13 @@ import java.util.UUID;
 public class PartidaController {
 
     private final PartidaService partidaService;
+
+    @GetMapping("/pendientes")
+    @Operation(summary = "Listar pendientes", description = "Obtiene partidas que deben ser validadas")
+    public ResponseEntity<List<PartidaResponse>> listarPendientes() {
+        List<PartidaResponse> lista = partidaService.listarPendientes();
+        return ResponseEntity.ok(lista);
+    }
 
     @GetMapping("/apuesta/{apuestaId}")
     @Operation(summary = "Buscar por apuesta", description = "Obtiene la partida asociada a una apuesta")

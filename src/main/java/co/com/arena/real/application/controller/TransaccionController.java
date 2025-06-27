@@ -43,6 +43,13 @@ public class TransaccionController {
         return ResponseEntity.ok(lista);
     }
 
+    @GetMapping("/pendientes")
+    @Operation(summary = "Listar pendientes", description = "Obtiene las transacciones pendientes")
+    public ResponseEntity<List<TransaccionResponse>> listarPendientes() {
+        List<TransaccionResponse> lista = transaccionService.listarPendientes();
+        return ResponseEntity.ok(lista);
+    }
+
     @GetMapping("/stream/{jugadorId}")
     public SseEmitter stream(@PathVariable String jugadorId) {
         return sseService.subscribe(jugadorId); // <- usando tu SseService refactorizado
@@ -54,6 +61,13 @@ public class TransaccionController {
         TransaccionResponse response = transaccionService.aprobarTransaccion(id);
         return ResponseEntity.ok(response);
 
+    }
+
+    @PostMapping("/{id}/cancelar")
+    @Operation(summary = "Cancelar transacción", description = "Marca la transacción como rechazada")
+    public ResponseEntity<TransaccionResponse> cancelar(@PathVariable UUID id) {
+        TransaccionResponse response = transaccionService.cancelarTransaccion(id);
+        return ResponseEntity.ok(response);
     }
 
 }
